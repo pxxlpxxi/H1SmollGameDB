@@ -11,7 +11,7 @@ namespace SmollGameDB.Database
     /// <summary>
     /// helper class for handling queries 
     /// </summary>
-    internal class DBHelper
+    internal class DBQueryHelper
     {
         private readonly DBConnectionManager _db = new();
 

@@ -14,7 +14,7 @@ namespace SmollGameDB.Repositories
     internal class ItemCpxRepository
     {
         private readonly DBConnectionManager _db = new();
-        private readonly DBHelper _helper = new();
+        private readonly DBQueryHelper _helper = new();
 
         public bool CreateItem(ItemCpx item)
         {
@@ -85,7 +85,7 @@ namespace SmollGameDB.Repositories
             var parameters = new Dictionary<string, object> {
                 { "@id", id}
             };
-            DBHelper helper = new();
+            DBQueryHelper helper = new();
             return helper.QueryDataReader(statement, parameters);
         }
         

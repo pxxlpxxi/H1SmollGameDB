@@ -93,7 +93,7 @@ namespace SmollGameDB.Repositories
             var parameters = new Dictionary<string, object> {
                 { "@Username", username}
             };
-            DBHelper helper = new();
+            DBQueryHelper helper = new();
             return helper.QueryDataReader(statement, parameters);
         }
         public bool CreateLogin(string username, string password)
@@ -109,7 +109,7 @@ namespace SmollGameDB.Repositories
                 { "@Username", username},
                 { "@Password", password}
             };
-            DBHelper helper = new();
+            DBQueryHelper helper = new();
             return helper.QueryDataManipulation(statement, parameters);
         }
 
@@ -138,7 +138,7 @@ namespace SmollGameDB.Repositories
             parameters["@OldUsername"] = oldUsername;
 
             string statement = SqlBuilder.ToString();
-            DBHelper helper = new();
+            DBQueryHelper helper = new();
             return helper.QueryDataManipulation(statement, parameters);
         }
 
@@ -149,7 +149,7 @@ namespace SmollGameDB.Repositories
             {
                 { "@Username", username }
             };
-            DBHelper helper = new();
+            DBQueryHelper helper = new();
             return helper.QueryDataManipulation(statement,parameters);
         }
 

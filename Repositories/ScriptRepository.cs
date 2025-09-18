@@ -14,7 +14,7 @@ namespace SmollGameDB.Repositories
         internal class ScriptRepository
         {
             private readonly DBConnectionManager _db = new();
-            private readonly DBHelper _helper = new();
+            private readonly DBQueryHelper _helper = new();
 
             // Helper metode til sikkert at hente strings der kan være null
             private string GetNullableString(SqlDataReader reader, string columnName)

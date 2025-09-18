@@ -14,7 +14,7 @@ namespace SmollGameDB.Repositories
     internal class LocationRepository
     {
         private readonly DBConnectionManager _db = new();
-        private readonly DBHelper _helper = new();
+        private readonly DBQueryHelper _helper = new();
 
         public bool CreateLocation(Location location)
         {

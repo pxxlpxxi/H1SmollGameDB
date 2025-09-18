@@ -1,4 +1,5 @@
-﻿using SmollGameDB.Repositories;
+﻿using SmollGameDB.Models;
+using SmollGameDB.Repositories;
 using SmollGameDB.Services;
 using System;
 using System.Collections.Generic;
@@ -66,9 +67,86 @@ namespace SmollGameDB.ConsoleUI
             }//end of running
 
         }
-        private void Create() { }
-        private void Read() { }
-        private void Update() { }
-        private void Delete() { }
+        private void Create()
+        {
+            Console.Clear();
+            Console.WriteLine("Create new monster type");
+
+            Console.Write("Name: ");
+            string name = Console.ReadLine();
+
+            MonsterType monster = new()
+            {
+                Name = name
+            };
+
+            _repo.Create(monster);
+            _helper.GreenText("Monster type created.");
+            Console.ReadKey();
+            _helper.Buffer("Returning");
+        }
+
+        private void Read()
+        {
+            Console.Clear();
+            Console.WriteLine("All monster types:\n");
+
+            List<MonsterType> monsters = _repo.GetAll();
+
+            foreach (MonsterType monster in monsters)
+            {
+                _helper.BlueText(monster.Name + "\n");
+                Console.WriteLine($"ID: {monster.Id}\n");
+                Console.WriteLine();
+            }
+
+            Console.ReadKey();
+        }
+
+        private void Update()
+        {
+            Console.Clear();
+            Console.WriteLine("Update monster type");
+
+            Console.Write("Monster Type ID: ");
+            int id = int.Parse(Console.ReadLine());
+
+            Console.Write("New Name: ");
+            string name = Console.ReadLine();
+
+            MonsterType monster = new()
+            {
+                Id = id,
+                Name = name
+            };
+
+            if (_repo.Update(monster))
+            {
+                _helper.GreenText("Monster type updated.");
+            }
+            Console.ReadKey();
+            _helper.Buffer("Returning");
+        }
+
+        private void Delete()
+        {
+            Console.Clear();
+            Console.WriteLine("Delete monster type");
+
+            Console.Write("Monster Type ID: ");
+            int id = int.Parse(Console.ReadLine());
+
+            if (_repo.Delete(id))
+            {
+                _helper.GreenText("Monster type deleted.");
+            }
+            else
+            {
+                _helper.RedText("Delete failed. Monster type may not exist.");
+            }
+
+            Console.ReadKey();
+            _helper.Buffer("Returning");
+        }
     }
 }

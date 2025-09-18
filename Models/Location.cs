@@ -10,6 +10,6 @@ namespace SmollGameDB.Models
     {
         public int Id { get; set; }
         public string Zone { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
     }
 }

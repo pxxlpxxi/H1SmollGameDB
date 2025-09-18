@@ -1,4 +1,5 @@
-﻿using SmollGameDB.Repositories;
+﻿using SmollGameDB.Models;
+using SmollGameDB.Repositories;
 using SmollGameDB.Services;
 using System;
 using System.Collections.Generic;
@@ -66,11 +67,133 @@ namespace SmollGameDB.ConsoleUI
             }//end of running
 
         }
-        private void Create() { }
-        private void Read() {
-            _repo.GetAllItems();
+        private void Create()
+        {
+            Console.Clear();
+            Console.WriteLine("Create new complex item");
+
+            Console.Write("Name: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Type: ");
+            string type = Console.ReadLine();
+
+            Console.Write("Description (optional): ");
+            string description = Console.ReadLine();
+
+            Console.Write("Player ID (can be empty): ");
+            string playerInput = Console.ReadLine();
+            int? playerId = string.IsNullOrWhiteSpace(playerInput) ? null : int.Parse(playerInput);
+
+            Console.Write("Location ID (can be empty): ");
+            string locationInput = Console.ReadLine();
+            int? locationId = string.IsNullOrWhiteSpace(locationInput) ? null : int.Parse(locationInput);
+
+            ItemCpx item = new()
+            {
+                Name = name,
+                Type = type,
+                Description = description,
+                PlayerId = playerId ?? 0,
+                LocationId = locationId ?? 0
+            };
+
+            _repo.CreateItem(item);
+            _helper.GreenText("Item created.");
+            Console.ReadKey();
+            _helper.Buffer("Returning");
         }
-        private void Update() { }
-        private void Delete() { }
+
+        private void Read()
+        {
+            Console.Clear();
+            Console.WriteLine("All complex items:\n");
+
+            List<ItemCpx> items = _repo.GetAllItems();
+
+            foreach (ItemCpx item in items)
+            {
+                _helper.BlueText(item.Name + "\n");
+                Console.WriteLine(
+                    $"Type: {item.Type}\n" +
+                    $"Description: {item.Description}\n" +
+                    $"ID: {item.Id}\n" +
+                    $"PlayerID: {item.PlayerId}\n" +
+                    $"LocationID: {item.LocationId}");
+                Console.WriteLine();
+            }
+
+            Console.ReadKey();
+        }
+
+        private void Update()
+        {
+            Console.Clear();
+            Console.WriteLine("Update complex item");
+
+            Console.Write("Item ID: ");
+            int id = int.Parse(Console.ReadLine());
+
+            Console.Write("New Name: ");
+            string name = Console.ReadLine();
+
+            Console.Write("New Type: ");
+            string type = Console.ReadLine();
+
+            Console.Write("New Description: ");
+            string description = Console.ReadLine();
+
+            Console.Write("New Player ID (or leave empty): ");
+            string playerInput = Console.ReadLine();
+            int? playerId = string.IsNullOrWhiteSpace(playerInput) ? null : int.Parse(playerInput);
+
+            Console.Write("New Location ID (or leave empty): ");
+            string locationInput = Console.ReadLine();
+            int? locationId = string.IsNullOrWhiteSpace(locationInput) ? null : int.Parse(locationInput);
+
+            ItemCpx item = new()
+            {
+                Id = id,
+                Name = name,
+                Type = type,
+                Description = description,
+                PlayerId = playerId ?? 0,
+                LocationId = locationId ?? 0
+            };
+
+            if (_repo.UpdateItem(item))
+            {
+                _helper.GreenText("Item updated.");
+            }
+            Console.ReadKey();
+            _helper.Buffer("Returning");
+        }
+
+        private void Delete()
+        {
+            Console.Clear();
+            Console.WriteLine("Delete complex item");
+
+            Console.Write("Item ID: ");
+            int id = int.Parse(Console.ReadLine());
+
+            (bool exists, bool success) del = _repo.DeleteItem(id);
+
+            if (!del.exists)
+            {
+                _helper.RedText("Item does not exist");
+            }
+            else if (!del.success)
+            {
+                _helper.RedText("Delete failed");
+            }
+            else
+            {
+                _helper.GreenText("Item deleted");
+            }
+
+            Console.ReadKey();
+            _helper.Buffer("Returning");
+        }
     }
 }

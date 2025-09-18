@@ -1,5 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
+using SmollGameDB.Database;
 using SmollGameDB.Models;
+using SmollGameDB.Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,105 +13,91 @@ namespace SmollGameDB.Repositories
 {
     internal class ItemCpxRepository
     {
-        private readonly string _connectionString;
-        public string ConnectionString => _connectionString;
-        //public ItemCpxRepository(string connectionString)
-        //{
-        //    _connectionString = connectionString;
-        //}
+        private readonly DBConnectionManager _db = new();
+        private readonly DBHelper _helper = new();
 
-        // Hent alle items
-        public List<ItemCpx> GetAllItems()
+        public bool CreateItem(ItemCpx item)
+        {
+            string statement = ItemCpxStatements.Create();
+            var parameters = new Dictionary<string, object>
+            {
+                ["@name"] = item.Name,
+                ["@type"] = item.Type ?? (object)DBNull.Value,
+                ["@description"] = item.Description ?? (object)DBNull.Value,
+                ["@player_id"] = item.PlayerId == 0 ? (object)DBNull.Value : item.PlayerId,
+                ["@location_id"] = item.LocationId == 0 ? (object)DBNull.Value : item.LocationId
+            };
+            return _helper.QueryDataManipulation(statement, parameters);
+        }
+
+        internal List<ItemCpx> GetAllItems()
         {
             var items = new List<ItemCpx>();
-            string sql = "SELECT Id, Name, Type, Description, PlayerId, LocationId FROM Items";
+            string statement = ItemCpxStatements.ReadAll();
 
-            using (var conn = new SqlConnection(_connectionString))
-            using (var cmd = new SqlCommand(sql, conn))
+            using SqlConnection conn = _db.CreateConnection();
+            using SqlCommand cmd = new SqlCommand(statement, conn);
+
+            try
             {
                 conn.Open();
-                using (var reader = cmd.ExecuteReader())
+                using SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    ItemCpx item = new ItemCpx
                     {
-                        items.Add(new ItemCpx
-                        {
-                            Id = reader.GetInt32(0),
-                            Name = reader.GetString(1),
-                            Type = reader.GetString(2),
-                            Description = reader.GetString(3),
-                            PlayerId = reader.GetInt32(4),
-                            LocationId = reader.GetInt32(5)
-                        });
-                    }
+                        Id = reader.GetInt32(reader.GetOrdinal("item_id")),
+                        Name = reader.GetString(reader.GetOrdinal("name")),
+                        Type = reader.IsDBNull(reader.GetOrdinal("type")) ? null : reader.GetString(reader.GetOrdinal("type")),
+                        Description = reader.IsDBNull(reader.GetOrdinal("description")) ? null : reader.GetString(reader.GetOrdinal("description")),
+                        PlayerId = reader.IsDBNull(reader.GetOrdinal("player_id")) ? 0 : reader.GetInt32(reader.GetOrdinal("player_id")),
+                        LocationId = reader.IsDBNull(reader.GetOrdinal("location_id")) ? 0 : reader.GetInt32(reader.GetOrdinal("location_id"))
+                    };
+                    items.Add(item);
                 }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
             return items;
         }
 
-        // Tilføj et item
-        public void AddItem(ItemCpx item)
+        public bool UpdateItem(ItemCpx item)
         {
-            string sql = @"
-            INSERT INTO Items (Name, Type, Description, PlayerId, LocationId)
-            VALUES (@Name, @Type, @Description, @PlayerId, @LocationId);
-            SELECT CAST(scope_identity() AS int);
-        ";
-
-            using (var conn = new SqlConnection(_connectionString))
-            using (var cmd = new SqlCommand(sql, conn))
+            string statement = ItemCpxStatements.Update();
+            var parameters = new Dictionary<string, object>
             {
-                cmd.Parameters.Add("@Name", SqlDbType.NVarChar).Value = item.Name;
-                cmd.Parameters.Add("@Type", SqlDbType.NVarChar).Value = item.Type;
-                cmd.Parameters.Add("@Description", SqlDbType.NVarChar).Value = item.Description;
-                cmd.Parameters.Add("@PlayerId", SqlDbType.Int).Value = item.PlayerId;
-                cmd.Parameters.Add("@LocationId", SqlDbType.Int).Value = item.LocationId;
+                ["@id"] = item.Id,
+                ["@name"] = item.Name,
+                ["@type"] = item.Type ?? (object)DBNull.Value,
+                ["@description"] = item.Description ?? (object)DBNull.Value,
+                ["@player_id"] = item.PlayerId == 0 ? (object)DBNull.Value : item.PlayerId,
+                ["@location_id"] = item.LocationId == 0 ? (object)DBNull.Value : item.LocationId
+            };
+            return _helper.QueryDataManipulation(statement, parameters);
+        }
+        public bool ItemExists(int id) {
+        
+            string statement = ItemCpxStatements.Exists();
 
-                conn.Open();
-                // Sæt den auto-genererede Id tilbage til item.Id
-                item.Id = (int)cmd.ExecuteScalar();
-            }
+            var parameters = new Dictionary<string, object> {
+                { "@id", id}
+            };
+            DBHelper helper = new();
+            return helper.QueryDataReader(statement, parameters);
+        }
+        
+        public (bool itemExists, bool sqlSuccess) DeleteItem(int id)
+        {
+            bool exists = ItemExists(id);
+
+            string statement = ItemCpxStatements.Delete();
+            var parameters = new Dictionary<string, object> { ["@id"] = id };
+            return (exists, _helper.QueryDataManipulation(statement, parameters));
         }
 
-        // Opdater et item
-        public void UpdateItem(ItemCpx item)
-        {
-            string sql = @"
-            UPDATE Items 
-            SET Name = @Name, Type = @Type, Description = @Description, PlayerId = @PlayerId, LocationId = @LocationId
-            WHERE Id = @Id";
-
-            using (var conn = new SqlConnection(_connectionString))
-            using (var cmd = new SqlCommand(sql, conn))
-            {
-                cmd.Parameters.Add("@Name", SqlDbType.NVarChar).Value = item.Name;
-                cmd.Parameters.Add("@Type", SqlDbType.NVarChar).Value = item.Type;
-                cmd.Parameters.Add("@Description", SqlDbType.NVarChar).Value = item.Description;
-                cmd.Parameters.Add("@PlayerId", SqlDbType.Int).Value = item.PlayerId;
-                cmd.Parameters.Add("@LocationId", SqlDbType.Int).Value = item.LocationId;
-                cmd.Parameters.Add("@Id", SqlDbType.Int).Value = item.Id;
-
-                conn.Open();
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        // Slet et item (ekstra)
-        public void DeleteItem(int id)
-        {
-            string sql = "DELETE FROM Items WHERE Id = @Id";
-
-            using (var conn = new SqlConnection(_connectionString))
-            using (var cmd = new SqlCommand(sql, conn))
-            {
-                cmd.Parameters.Add("@Id", SqlDbType.Int).Value = id;
-
-                conn.Open();
-                cmd.ExecuteNonQuery();
-            }
-        }
     }
-
-
 }
 

@@ -30,6 +30,8 @@ namespace SmollGameDB.ConsoleUI
                         "[5] Monster",
                         "[6] Player",
                         " " ,
+                        "[7] From script",
+                        " ",
                         "[Q] Quit"};
 
                 _helper.PrintLines(menu);
@@ -69,6 +71,11 @@ namespace SmollGameDB.ConsoleUI
                     case ConsoleKey.NumPad6:
                         PlayerMenu player = new();
                         player.Run();
+                        break;
+                        case ConsoleKey.D7:
+                            case ConsoleKey.NumPad7:
+                        ScriptMenu script = new();
+                        script.Run();
                         break;
                     case ConsoleKey.Q:
                         running = false;

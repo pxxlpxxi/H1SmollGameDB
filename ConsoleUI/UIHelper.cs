@@ -8,6 +8,13 @@ namespace SmollGameDB.ConsoleUI
 {
     internal class UIHelper
     {
+        public void PrintLines(string[] lines)
+        {
+            foreach (string line in lines)
+            {
+                Console.WriteLine(line);
+                           }
+        }
         public string ReadPassword()
         {
             string password = "";
@@ -52,8 +59,20 @@ namespace SmollGameDB.ConsoleUI
             Thread.Sleep(500);
             Console.Clear();
         }
-        public void RedText(string text) {
-            Console.ForegroundColor=ConsoleColor.DarkRed;
+        public void RedText(string text)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.Write(text);
+            Console.ResetColor();
+        }
+        public void GreenText(string text)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.Write(text);
+            Console.ResetColor();
+        }
+        public void BlueText(string text) {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.Write(text);
             Console.ResetColor();
         }

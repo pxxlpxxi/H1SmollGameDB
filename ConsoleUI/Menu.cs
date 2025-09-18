@@ -7,48 +7,64 @@ using System.Threading.Tasks;
 
 namespace SmollGameDB.ConsoleUI
 {
-    internal static class Menu
+    public static class Menu
     {
+        private static UIHelper _helper = new();
         public static void Run()
         {
+
+
+
             ConsoleKey key;
             bool running = true;
 
-
             while (running)
             {
-                Console.WriteLine("Entities\n");
+                string[] menu = { "Entitiy Management System", " ",
+                        "[1] Login",
+                        " ",
+                        "Administrate Entities:",
+                        "[2] Simple Item",
+                        "[3] Complex Item",
+                        "[4] Location",
+                        "[5] Monster",
+                        " " ,
+                        "[Q] Quit"};
 
-                Console.WriteLine("[1] Simple Item\n" +
-                    "[2] Complex Item\n" +
-                    "[3] Location\n" +
-                    "[4] Login\n" +
-                    "[5] Monster\n");
-
+                _helper.PrintLines(menu);
                 key = Console.ReadKey().Key;
 
                 switch (key)
                 {
                     case ConsoleKey.D1: //itemsmp
                     case ConsoleKey.NumPad1:
-                        ItemSmpMenu.Run();
+                        LoginMenu login = new();
+                        login.Run();
                         break;
                     case ConsoleKey.D2:
                     case ConsoleKey.NumPad2:
-                        ItemCpxMenu.Run();
+                        ItemSmpMenu itemS = new();
+                        itemS.Run();
+
                         break;
                     case ConsoleKey.D3:
                     case ConsoleKey.NumPad3:
-                        LocationMenu.Run();
+                        ItemCpxMenu itemC = new();
+                        itemC.Run();
+
                         break;
                     case ConsoleKey.D4:
                     case ConsoleKey.NumPad4:
-                        LoginMenu.Run();
+                        LocationMenu location= new();
+                        location.Run();
+
                         break;
                     case ConsoleKey.D5:
                     case ConsoleKey.NumPad5:
-                        MonsterTypeMenu.Run();
+                        MonsterTypeMenu monsterT = new();
+                        monsterT.Run();
                         break;
+                   
                     case ConsoleKey.Q:
                         running = false;
                         break;

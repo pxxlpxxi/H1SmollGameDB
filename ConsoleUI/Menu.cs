@@ -30,7 +30,8 @@ namespace SmollGameDB.ConsoleUI
                         "[5] Monster",
                         "[6] Player",
                         " " ,
-                        "[7] From script",
+                        "[7] From Script",
+                        "[8] From Script (Table View)",
                         " ",
                         "[Q] Quit"};
 
@@ -76,6 +77,11 @@ namespace SmollGameDB.ConsoleUI
                             case ConsoleKey.NumPad7:
                         ScriptMenu script = new();
                         script.Run();
+                        break;
+                        case ConsoleKey.D8:
+                            case ConsoleKey.NumPad8:
+                        ScriptTables tables = new();
+                        tables.Run();
                         break;
                     case ConsoleKey.Q:
                         running = false;

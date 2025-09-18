@@ -12,7 +12,9 @@ namespace SmollGameDB.Repositories
 {
     internal class PlayerRepository
     {
-        private readonly DBHelper _db = new();
+        private readonly DBConnectionManager _db = new();
+
+        private readonly DBHelper _helper = new();
 
         public bool CreatePlayer(Player player)
         {
@@ -23,15 +25,43 @@ namespace SmollGameDB.Repositories
                 ["@level"] = player.Level,
                 ["@hp"] = player.HP
             };
-            return _db.QueryDataManipulation(statement, parameters);
+            return _helper.QueryDataManipulation(statement, parameters);
         }
         public void Read()
         {
         }
-        public List<Player> GetAllPlayers()
+        internal List<Player> GetAllPlayers()
         {
+            var players = new List<Player>();
             string statement = "SELECT player_id, login_id, level, hp FROM player";
-            return _db.QueryPlayers(statement, null);
+
+            using SqlConnection conn = _db.CreateConnection(); // _db er DBConnectionManager
+            using SqlCommand cmd = new SqlCommand(statement, conn);
+
+            try
+            {
+                conn.Open();
+                using SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Player p = new Player
+                    {
+                        ID = reader.GetInt32(reader.GetOrdinal("player_id")),
+                        LoginID = reader.GetInt32(reader.GetOrdinal("login_id")),
+                        Level = reader.GetInt32(reader.GetOrdinal("level")),
+                        HP = reader.GetInt32(reader.GetOrdinal("hp"))
+                    };
+                    players.Add(p);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            // using sørger for lukning af reader og connection
+
+            return players;
         }
         public bool UpdatePlayer(Player player)
         {
@@ -46,12 +76,12 @@ namespace SmollGameDB.Repositories
                 {"@hp", player.HP}
             };
             //returner om sql-forespørgsel lykkedes
-            return _db.QueryDataManipulation(statement, param);
+            return _helper.QueryDataManipulation(statement, param);
         }
         public bool Delete(int id) {
             string statement = PlayerStatements.Delete();
             var param = new Dictionary<string, object> { { "@id", id } };
-            return _db.QueryDataManipulation(statement, param);
+            return _helper.QueryDataManipulation(statement, param);
         }
 
     }

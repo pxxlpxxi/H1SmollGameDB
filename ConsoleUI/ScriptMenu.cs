@@ -21,12 +21,13 @@ namespace SmollGameDB.ConsoleUI
                 "Choose a script statement",
                 " ",
                 "[1] List itemComplex with location",
-                "[2] List itemComplex with location",
+                "[2] List itemComplex with owner",
                 "[3] Show login with player stats",
                 "[4] List lost items (simple + complex) with zone",
                 "[5] Show login-player with individual items",
-                "[6] Show login-player with aggregated items",
+                "[6] Show login-player items",
                 "[7] Show login-player with aggregated items",
+                "[8] Show player possessions count",
                 " ",
                 "[R] Return",
                 "[Q] Quit" };
@@ -65,12 +66,18 @@ namespace SmollGameDB.ConsoleUI
                         break;
                     case ConsoleKey.D6:
                     case ConsoleKey.NumPad6:
-                        ShowLoginPlayerItems();
+                        ShowLoginPlayerItems(); // INDIVIDUAL
                         break;
+
                     case ConsoleKey.D7:
                     case ConsoleKey.NumPad7:
+                        ShowLoginPlayerItemsAggregated(); // AGGREGATED
+                        break;
+                    case ConsoleKey.D8:
+                    case ConsoleKey.NumPad8:
                         ShowPlayerPossessionsCount();
                         break;
+
                     case ConsoleKey.R:
                         running = false;
                         _helper.Buffer("Returning");
@@ -87,10 +94,15 @@ namespace SmollGameDB.ConsoleUI
         private void ShowItemComplexWithLocation()
         {
             var list = _repo.GetItemComplexWithLocation();
-            Console.WriteLine("\nItemComplex with Location:");
+            Console.Clear();
+            _helper.BlueText("ItemComplex with Location:\n");
+            Console.WriteLine();
+
             foreach (var item in list)
             {
-                Console.WriteLine($"Item: {item.LostItem}, Location: {item.Location}");
+                _helper.CyanText($"Item: {item.LostItem}\n");
+                Console.WriteLine($"Location: {item.Location}");
+                Console.WriteLine();
             }
             Pause();
         }
@@ -98,10 +110,15 @@ namespace SmollGameDB.ConsoleUI
         private void ShowItemComplexWithOwner()
         {
             var list = _repo.GetItemComplexWithOwner();
-            Console.WriteLine("\nItemComplex with Owner:");
+            Console.Clear();
+            _helper.BlueText("ItemComplex with Owner:\n");
+            Console.WriteLine();
+
             foreach (var item in list)
             {
-                Console.WriteLine($"Item: {item.Item}, Owner: {item.PossessionOf}");
+                _helper.CyanText($"Item: {item.Item}\n");
+                Console.WriteLine($"Owner: {item.PossessionOf ?? "N/A"}");
+                Console.WriteLine();
             }
             Pause();
         }
@@ -109,10 +126,18 @@ namespace SmollGameDB.ConsoleUI
         private void ShowLoginWithPlayerStats()
         {
             var list = _repo.GetLoginWithPlayerStats();
-            Console.WriteLine("\nLogin with Player Stats:");
+            Console.Clear();
+            _helper.BlueText("Login with Player Stats:\n");
+            Console.WriteLine();
+
             foreach (var player in list)
             {
-                Console.WriteLine($"LoginID: {player.LoginID}, Username: {player.Username}, Level: {player.Level}, HP: {player.HP}");
+                _helper.CyanText($"Username: {player.Username}\n");
+                Console.WriteLine(
+                    $"LoginID: {player.LoginID}\n" +
+                    $"Level: {player.Level}\n" +
+                    $"HP: {player.HP}");
+                Console.WriteLine();
             }
             Pause();
         }
@@ -120,10 +145,18 @@ namespace SmollGameDB.ConsoleUI
         private void ShowLostItemsSimpleAndComplex()
         {
             var list = _repo.GetLostItemsSimpleAndComplex();
-            Console.WriteLine("\nLost Items (Simple + Complex) with Zones:");
+            Console.Clear();
+            _helper.BlueText("Lost Items (Simple + Complex) with Zones:\n");
+
+            Console.WriteLine();
+
             foreach (var item in list)
             {
-                Console.WriteLine($"Item: {item.LostItem}, Description: {item.Description}, Zone: {item.Zone ?? "N/A"}");
+                _helper.CyanText($"Item: {item.LostItem}\n");
+                Console.WriteLine(
+                    $"Description: {item.Description}\n" +
+                    $"Zone: {item.Zone ?? "N/A"}");
+                Console.WriteLine();
             }
             Pause();
         }
@@ -131,10 +164,20 @@ namespace SmollGameDB.ConsoleUI
         private void ShowLoginPlayerItems()
         {
             var list = _repo.GetLoginPlayerItems();
-            Console.WriteLine("\nLogin-Player Items (individual rows):");
+            Console.Clear();
+            _helper.BlueText("Login-Player Items (individual rows):\n");
+
+            Console.WriteLine();
+
             foreach (var item in list)
             {
-                Console.WriteLine($"LoginID: {item.LoginID}, Username: {item.Username}, Level: {item.Level}, HP: {item.HP}, Item: {item.Item ?? "None"}");
+                _helper.CyanText($"Username: {item.Username}\n");
+                Console.WriteLine(
+                    $"LoginID: {item.LoginID}\n" +
+                    $"Level: {item.Level}\n" +
+                    $"HP: {item.HP}\n" +
+                    $"Item: {item.Item ?? "None"}");
+                Console.WriteLine();
             }
             Pause();
         }
@@ -142,10 +185,20 @@ namespace SmollGameDB.ConsoleUI
         private void ShowLoginPlayerItemsAggregated()
         {
             var list = _repo.GetLoginPlayerItemsAggregated();
-            Console.WriteLine("\nLogin-Player Items (aggregated):");
+            Console.Clear();
+            _helper.BlueText("Login-Player Items (aggregated):\n");
+
+            Console.WriteLine();
+
             foreach (var item in list)
             {
-                Console.WriteLine($"LoginID: {item.LoginID}, Username: {item.Username}, Level: {item.Level}, HP: {item.HP}, Items: {item.Items ?? "None"}");
+                _helper.CyanText($"Username: {item.Username}\n");
+                Console.WriteLine(
+                    $"LoginID: {item.LoginID}\n" +
+                    $"Level: {item.Level}\n" +
+                    $"HP: {item.HP}\n" +
+                    $"Items: {item.Items ?? "None"}");
+                Console.WriteLine();
             }
             Pause();
         }
@@ -153,17 +206,25 @@ namespace SmollGameDB.ConsoleUI
         private void ShowPlayerPossessionsCount()
         {
             var list = _repo.GetPlayerPossessionsCount();
-            Console.WriteLine("\nPlayer Possessions Count:");
+            Console.Clear();
+            _helper.BlueText("Player Possessions Count:\n");
+
+            Console.WriteLine();
+
             foreach (var p in list)
             {
-                Console.WriteLine($"Username: {p.Username}, Possessions: {p.Possessions}");
+                _helper.CyanText($"Username: {p.Username}\n");
+                Console.WriteLine($"Possessions: {p.Possessions}");
+                Console.WriteLine();
             }
             Pause();
         }
 
         private void Pause()
         {
+
             Console.WriteLine("\nPress any key to return to menu...");
             Console.ReadKey();
         }
-    } }
+    }
+}

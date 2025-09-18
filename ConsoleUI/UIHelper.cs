@@ -71,8 +71,14 @@ namespace SmollGameDB.ConsoleUI
             Console.Write(text);
             Console.ResetColor();
         }
-        public void BlueText(string text) {
+        public void CyanText(string text) {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.Write(text);
+            Console.ResetColor();
+        }
+        public void BlueText(string text)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
             Console.Write(text);
             Console.ResetColor();
         }

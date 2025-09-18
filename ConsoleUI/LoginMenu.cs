@@ -212,7 +212,7 @@ namespace SmollGameDB.ConsoleUI
             {
                 Console.Clear();
                 Console.Write("Update credentials for '");
-                _helper.BlueText(login.Username);
+                _helper.CyanText(login.Username);
                 Console.WriteLine("'.");
 
                 bool confirm = QuitCheckWithMessage("update login");
@@ -233,7 +233,7 @@ namespace SmollGameDB.ConsoleUI
                     {
                         newUsername = login.Username;
                     }
-                    _helper.BlueText("Username set: "+newUsername);
+                    _helper.CyanText("Username set: "+newUsername);
 
                     Console.Write("\nNew password (leave blank to keep current): ");
                     string newPassword = Console.ReadLine();
@@ -273,7 +273,7 @@ namespace SmollGameDB.ConsoleUI
             while (deleting)
             {
                 Console.Write("Deleting login '");
-                _helper.BlueText(login.Username);
+                _helper.CyanText(login.Username);
                 Console.WriteLine("'");
                 bool confirm = QuitCheckWithMessage("delete login");
                 if (!confirm)

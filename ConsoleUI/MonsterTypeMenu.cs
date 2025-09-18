@@ -95,7 +95,7 @@ namespace SmollGameDB.ConsoleUI
 
             foreach (MonsterType monster in monsters)
             {
-                _helper.BlueText(monster.Name + "\n");
+                _helper.CyanText(monster.Name + "\n");
                 Console.WriteLine($"ID: {monster.Id}\n");
                 Console.WriteLine();
             }

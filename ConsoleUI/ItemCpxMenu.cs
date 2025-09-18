@@ -113,7 +113,7 @@ namespace SmollGameDB.ConsoleUI
 
             foreach (ItemCpx item in items)
             {
-                _helper.BlueText(item.Name + "\n");
+                _helper.CyanText(item.Name + "\n");
                 Console.WriteLine(
                     $"Type: {item.Type}\n" +
                     $"Description: {item.Description}\n" +

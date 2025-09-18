@@ -99,7 +99,7 @@ namespace SmollGameDB.ConsoleUI
 
             foreach (Location loc in locations)
             {
-                _helper.BlueText(loc.Zone + "\n");
+                _helper.CyanText(loc.Zone + "\n");
                 Console.WriteLine(
                     $"Description: {loc.Description}\n" +
                     $"ID: {loc.Id}");

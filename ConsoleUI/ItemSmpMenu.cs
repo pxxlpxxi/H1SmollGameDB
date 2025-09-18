@@ -103,7 +103,7 @@ namespace SmollGameDB.ConsoleUI
 
             foreach (ItemSmp item in items)
             {
-                _helper.BlueText(item.Name + "\n");
+                _helper.CyanText(item.Name + "\n");
                 Console.WriteLine(
                     $"Description: {item.Description}\n" +
                     $"ID: {item.Id}\n" +

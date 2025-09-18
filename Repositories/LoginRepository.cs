@@ -20,31 +20,7 @@ namespace SmollGameDB.Repositories
         private readonly DBConnectionManager _db = new();
         private Login? _currentUser;
         public Login? CurrentUser => _currentUser;
-        //public LoginRepository(DBConnectionManager db)
-        //{
-        //    _db = db;
-        //}
-        //private readonly string _currentUser;
-        //public string CurrentUser => _currentUser;
 
-        public void ReadAllUsers() { }
-        public void UpdateLogin() { }
-        public void DeleteLogin() { }
-
-        //private List<Login> GetAllLogins()
-        //{
-        //    //    List<Login> logins = new();
-        //    //    try
-        //    //    {
-        //    //        _conn.Open();
-
-        //    //    }
-        //    //    catch (Exception e)
-        //    //    {
-        //    //        Console.WriteLine(e.Message);
-        //    //    }
-        //    //    return null;
-        //}
         private string CreateLoginStatement() //helper
         {
             return "INSERT INTO [login] (username, password) VALUES (@Username, @Password);";

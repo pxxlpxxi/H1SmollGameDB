@@ -33,7 +33,8 @@ namespace SmollGameDB.Repositories
         internal List<Player> GetAllPlayers()
         {
             var players = new List<Player>();
-            string statement = "SELECT player_id, login_id, level, hp FROM player";
+            //string statement = "SELECT player_id, login_id, level, hp FROM player";
+            string statement = PlayerStatements.ReadAll();
 
             using SqlConnection conn = _db.CreateConnection(); // _db er DBConnectionManager
             using SqlCommand cmd = new SqlCommand(statement, conn);

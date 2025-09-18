@@ -67,7 +67,9 @@ namespace SmollGameDB.ConsoleUI
 
         }
         private void Create() { }
-        private void Read() { }
+        private void Read() {
+            _repo.GetAllItems();
+        }
         private void Update() { }
         private void Delete() { }
     }

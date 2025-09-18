@@ -28,6 +28,7 @@ namespace SmollGameDB.ConsoleUI
                         "[3] Complex Item",
                         "[4] Location",
                         "[5] Monster",
+                        "[6] Player",
                         " " ,
                         "[Q] Quit"};
 
@@ -55,7 +56,7 @@ namespace SmollGameDB.ConsoleUI
                         break;
                     case ConsoleKey.D4:
                     case ConsoleKey.NumPad4:
-                        LocationMenu location= new();
+                        LocationMenu location = new();
                         location.Run();
 
                         break;
@@ -64,7 +65,11 @@ namespace SmollGameDB.ConsoleUI
                         MonsterTypeMenu monsterT = new();
                         monsterT.Run();
                         break;
-                   
+                    case ConsoleKey.D6:
+                    case ConsoleKey.NumPad6:
+                        PlayerMenu player = new();
+                        player.Run();
+                        break;
                     case ConsoleKey.Q:
                         running = false;
                         break;

@@ -8,9 +8,11 @@ namespace SmollGameDB.Models
 {
     internal class Player
     {
-        public int Id { get; set; }
-        public int Login { get; set; }
+        public int ID { get; set; }
+        public int LoginID { get; set; }
         public int Level { get; set; }
         public int HP { get; set; }
+
+
     }
 }

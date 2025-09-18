@@ -16,6 +16,12 @@ namespace SmollGameDB.Models
         {
           
         }
+        public Login(int id, string username, string password)
+        {
+            Id = id;
+            Username = username;
+            Password = password;
+        }
     }
 }
  

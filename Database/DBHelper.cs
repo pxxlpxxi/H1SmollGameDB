@@ -17,13 +17,15 @@ namespace SmollGameDB.Database
 
         public bool QueryDataManipulation(string statement, Dictionary<string, object> parameters)
         {
-            using SqlConnection conn = _db.CreateConnection();
+             SqlConnection conn = _db.CreateConnection();
 
-            using SqlCommand cmd = new SqlCommand(statement, conn);
-
-            foreach (var param in parameters)
+            SqlCommand cmd = new SqlCommand(statement, conn);
+            if (parameters != null)
             {
-                cmd.Parameters.AddWithValue(param.Key, param.Value);
+                foreach (var param in parameters)
+                {
+                    cmd.Parameters.AddWithValue(param.Key, param.Value);
+                }
             }
 
             try
@@ -42,7 +44,45 @@ namespace SmollGameDB.Database
                 conn.Close();
             }
         }
+        public List<Player> QueryPlayers(string statement, Dictionary<string, object>? parameters)
+        {
+            var players = new List<Player>();
 
+            using SqlConnection conn = _db.CreateConnection();
+            using SqlCommand cmd = new SqlCommand(statement, conn);
+
+            if (parameters != null)
+            {
+                foreach (var param in parameters)
+                {
+                    cmd.Parameters.AddWithValue(param.Key, param.Value);
+                }
+            }
+
+            try
+            {
+                conn.Open();
+                using SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    players.Add(new Player
+                    {
+                        ID = reader.GetInt32(0),
+                        LoginID = reader.GetInt32(1),
+                        Level = reader.GetInt32(2),
+                        HP = reader.GetInt32(3)
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            //connection og reader lukkes automatisk via using
+
+            return players;
+        }
         public bool QueryDataReader(string statement, Dictionary<string, object>? parameters)
         {
             using SqlConnection conn = _db.CreateConnection();

@@ -1,4 +1,5 @@
-﻿using SmollGameDB.Repositories;
+﻿using SmollGameDB.Models;
+using SmollGameDB.Repositories;
 using SmollGameDB.Services;
 using System;
 using System.Collections.Generic;
@@ -66,8 +67,40 @@ namespace SmollGameDB.ConsoleUI
             }//end of running
 
         }
-        private void Create() { }
-        private void Read() { }
+        private void Create() {
+            Console.Clear();
+            Console.WriteLine("Create new player");
+
+
+            Console.Write("Login ID: ");
+            int loginId = int.Parse(Console.ReadLine());
+
+            Console.Write("Level: ");
+            int level = int.Parse(Console.ReadLine());
+
+            Console.Write("HP: ");
+            int hp = int.Parse(Console.ReadLine());
+
+            Player player = new(){ LoginID = loginId, Level = level, HP = hp };
+            _repo.CreatePlayer(player);
+
+            _helper.GreenText("Player created.");
+            Console.ReadKey();
+            _helper.Buffer("Returning");
+        }
+        private void Read() {
+            Console.Clear();
+            Console.WriteLine("All players:\n");
+            
+            List<Player> players = _repo.GetAllPlayers();
+
+            foreach (Player p in players)
+            {
+                Console.WriteLine($"ID: {p.ID}, LoginID: {p.LoginID}, Level: {p.Level}, HP: {p.HP}");
+                Console.WriteLine();
+            }
+            Console.ReadKey();
+        }
         private void Update() { }
         private void Delete() { }
     }
